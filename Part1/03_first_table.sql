@@ -15,6 +15,12 @@ CREATE TABLE basics.student(
     email TEXT NOT NULL UNIQUE,
     age INTEGER CHECK(AGE>=10),
     created_at TIMESTAMP DEFAULT NOW()
-
-    
 );
+
+INSERT INTO basics.student(name,email,age)
+values ('sangam', 'sangam@gmai.com', 20),
+       ('lala', 'lala@gmai.com', 25),
+       ('ramu', 'ramu@gmai.com', 14);
+
+
+SELECT * FROM basics.student;
