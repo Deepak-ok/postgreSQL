@@ -13,4 +13,4 @@ SELECT
    comments.body As comments_body
    FROM posts --left table
    LEFT JOIN comments
-   ON posts.id= comments.post_id
+   ON posts.id= comments.post_id;
