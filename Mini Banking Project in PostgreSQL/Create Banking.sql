@@ -36,9 +36,17 @@ transaction_id SERIAL PRIMARY KEY,
 account_id INT,
 transaction_type VARCHAR(20),
 amount DECIMAL(10,2),
-transaction TIMESTAMP DEFAULT NOW(),
+transaction_date DATE,
 FOREIGN KEY(account_id) REFERENCES banking.accounts(account_id)
 );
+
+ALTER TABLE banking.transactions
+RENAME COLUMN  transaction TO transaction_date;
+
+
+ALTER TABLE banking.transactions
+ALTER COLUMN transaction_date TYPE DATE;
+
 
 CREATE TABLE banking.loan(
 loan_id SERIAL PRIMARY KEY,
@@ -56,8 +64,10 @@ VALUES ('SBI MAIN','Delhi'),
 	   ('ICICI', 'Pune'),
 	   ('Axis Bank','Nagpur'),
 	   ('Kotak Bank','Ahmedabad');
+	   DELETE FROM  banking.branch;
 
 SELECT * FROM  banking.branch;
+
 
 INSERT INTO banking.customers(customer_name, phone,city)
 values ('Amit Sharma','45148651','Delhi'),
@@ -65,6 +75,48 @@ values ('Amit Sharma','45148651','Delhi'),
 	   ('Rahul Singh ','9648615','pune'),
 	   ('Sneha Patil ','4521555','Nagpur'),
 	   ('Rohit Mehta  ','7895258','Ahmedabad');
-SELECT * FROM  banking.customers;	   
 
+INSERT INTO banking.customers(customer_name, phone,city)
+values ('Shalu Rathore','4785552','Lahore'),
+       ('Ranu','4785255','Gwalior');
+	   DELETE FROM  banking.customers;
+SELECT * FROM  banking.customers;
+
+INSERT INTO banking.accounts(customer_id, branch_id, account_type,balance)
+VALUES (1,1, 'Saving', 50000),
+       (2,2, 'Saving', 475.55),
+	   (3,3, 'Current', 47510),
+	   (4,4, 'Saving', 7000),
+	   (5,5, 'Current', 46000),
+	   (6,1, 'Saving', 40000),
+	   (7,2, 'Saving', 62000);
+	   -- (8,3, 'Current', 30000),
+	   -- (9,4, 'Saving', 0000),
+	   -- (10,5, 'Saving', 750000);
+SELECT * FROM  banking.accounts;
+DELETE FROM  banking.accounts;
+SELECT * FROM  banking.accounts;
+
+INSERT INTO banking.transactions(account_id,transaction_type,amount,transaction_date)
+VALUES (1,'Deposit',10000,'2024-10-22'),
+       (2,'Withdraw',50000,'2024-10-10'),
+	   (3,'Deposit',15000,'2024-01-22'),
+	   (4,'Withdraw',2000,'2024-10-13'),
+	   (5,'Deposit',8000,'2024-10-14'),
+	   (6,'Withdraw',3000,'2024-10-15'),
+	   (7,'Deposit',13000,'2024-10-16');
+	 --   (8,'Withdraw',4000,'2024-10-17'),
+  --       (9,'Deposit',9000,'2024-10-18'),
+		-- (10,'Withdraw',4500,'2024-10-19');
+DELETE FROM  banking.transactions;
+SELECT * FROM  banking.transactions;
+
+INSERT INTO banking.loan(customer_id,branch_id,loan_amount,loan_type)
+VALUES (1,1,5000,'Home Loan'),
+       (3,3,2000,'Car Loan'),
+	   (5,5,8000,'Personal Loan'),
+	   (7,2,5000,'Bussiness Loan'),
+	   (4,3,5000,'Education Loan');
+	   DELETE FROM  banking.loan;
+SELECT * FROM  banking.loan;
 
