@@ -120,3 +120,106 @@ VALUES (1,1,5000,'Home Loan'),
 	   DELETE FROM  banking.loan;
 SELECT * FROM  banking.loan;
 
+-- 
+SELECT 
+  cust.customer_name,
+  acc.account_id,
+  acc.balance
+  FROM banking.customers cust
+  INNER JOIN banking.accounts acc
+  ON cust.customer_id= acc.customer_id;
+
+SELECT 
+  cust.customer_name,
+  loan.loan_amount
+  FROM banking.customers cust
+  Left JOIN banking.loan loan
+  ON cust.customer_id= loan.customer_id;
+
+ SELECT 
+  cust.customer_name,
+  loan.loan_amount,
+  loan.*,
+  cust.*
+  FROM banking.customers cust
+  JOIN banking.loan loan
+  ON cust.customer_id= loan.customer_id;
+
+ SELECT 
+  cust.customer_name,
+ acc.account_id,
+  trn.amount,
+  trn.transaction_type
+  FROM banking.customers cust
+     JOIN banking.accounts acc
+  ON cust.customer_id= acc.customer_id
+     JOIN  banking.transactions trn
+  ON acc.account_id= trn.account_id;
+
+CREATE OR REPLACE FUNCTION banking.total_balance()
+RETURNS NUMERIC AS $BODY$
+BEGIN
+  RETURN (SELECT SUM(balance) FROM banking.accounts);
+END;
+$BODY$ LANGUAGE plpgsql;
+SELECT banking.total_balance();
+
+CREATE OR REPLACE FUNCTION banking.total_balance1()
+RETURNS NUMERIC AS $BODY$
+DECLARE tot_amt NUMERIC;
+BEGIN
+   SELECT SUM(balance) INTO tot_amt FROM banking.accounts;
+   RETURN tot_amt;
+END;
+$BODY$ LANGUAGE plpgsql;
+
+SELECT banking.total_balance1();
+
+SELECT * FROM banking.transactions;
+CREATE OR REPLACE PROCEDURE banking.prc_add_transaction(
+acc INT,
+amt NUMERIC,
+type VARCHAR
+)
+LANGUAGE plpgsql
+AS $$
+BEGIN 
+ INSERT INTO banking.transactions(account_id, amount, transaction_type)
+ VALUES(acc,amt,type);
+ END;
+ $$;
+ CALL banking.prc_add_transaction(1,5000,'Deposit');
+ SELECT * FROM banking.transactions;
+
+ ALTER TABLE banking.transactions
+ ALTER COLUMN transaction_date
+ SET DEFAULT now();
+
+  CALL banking.prc_add_transaction(2,75000,'loan');
+ SELECT * FROM banking.transactions;
+
+
+CREATE OR REPLACE PROCEDURE banking.prc_deposit_money(
+acc_id INT,
+deposit_amount NUMERIC
+)
+LANGUAGE plpgsql
+AS $$
+BEGIN 
+  UPDATE banking.accounts
+  SET balance=balance+deposit_amount
+  WHERE account_id=acc_id;
+END;
+$$;
+
+CALL banking.prc_deposit_money(1,10000);
+select * from banking.accounts WHERE account_id=1;
+
+
+
+ 
+
+ 
+
+
+
